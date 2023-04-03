@@ -6,18 +6,21 @@ import io.circe.*
 import io.circe.derivation.Configuration
 import io.circe.generic.semiauto.*
 import io.circe.{Decoder, Encoder}
+import types.Country.Country
+import types.Genres.Genres
+import types.Ranking.Ranking
 
 import java.time.LocalDate
 
 case class Movie(
-    title: String,
-    country: String, // TODO: ISO format
+    title: String, // TODO: max 250 char
+    country: Country,
     year: Int,
     originalTitle: Option[String],
     frenchRelease: Option[LocalDate],
     synopsis: Option[String],
-    genres: List[String], // TODO: Refined type
-    ranking: Int // TODO: Refined type
+    genres: Genres,
+    ranking: Ranking
 )
 
 object Movie {
