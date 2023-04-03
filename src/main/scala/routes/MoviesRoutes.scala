@@ -1,15 +1,14 @@
 package routes
 
-import cats.effect.{Async, Concurrent}
+import cats.effect.Async
 import cats.implicits.*
-import io.circe.Json
 import modules.{Movie, MoviesModule, given}
 import org.http4s.circe.*
 import org.http4s.circe.CirceEntityDecoder.*
 import org.http4s.circe.CirceEntityEncoder.*
 import org.http4s.dsl.Http4sDsl
 import org.http4s.dsl.impl.OptionalQueryParamDecoderMatcher
-import org.http4s.{EntityDecoder, HttpRoutes}
+import org.http4s.HttpRoutes
 
 object Genre extends OptionalQueryParamDecoderMatcher[String]("genre")
 object Year extends OptionalQueryParamDecoderMatcher[Int]("year")
