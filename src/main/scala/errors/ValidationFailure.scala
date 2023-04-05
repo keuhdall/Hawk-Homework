@@ -1,6 +1,10 @@
 package errors
 
-trait ValidationFailure extends Throwable
+import io.circe.Json
+
+trait ValidationFailure extends Throwable {
+  def toJson: Json = Json.obj("error" -> Json.fromString(getMessage))
+}
 
 case object CountryValidationFailure extends ValidationFailure {
   override def getMessage: String =
@@ -26,4 +30,9 @@ case class GenresValuesValidationFailure(invalidValues: List[String])
 case object RankingValidationFailure extends ValidationFailure {
   override def getMessage: String =
     "Invalid ranking value: should be between 0 and 10"
+}
+
+case object MissingOriginalTitleError extends ValidationFailure {
+  override def getMessage: String =
+    "Missing original title for non-French release"
 }

@@ -5,13 +5,16 @@ ThisBuild / scalaVersion := "3.2.2"
 lazy val root = (project in file("."))
   .settings(
     name := "Hawk-Homework",
-    dockerExposedPorts ++= Seq(8080),
+    dockerExposedPorts ++= Seq(5005, 8080),
     commonSettings,
+    Universal / javaOptions ++= Seq("-jvm-debug 5005"),
     libraryDependencies ++=
       commonDeps ++
         circeDeps ++
         doobieDeps ++
-        http4sDeps
+        http4sDeps ++
+        logDeps ++
+        Seq(deps.pureConfig)
   )
   .enablePlugins(ScalafmtPlugin)
   .enablePlugins(JavaServerAppPackaging)
@@ -19,9 +22,8 @@ lazy val root = (project in file("."))
 
 lazy val commonSettings = Seq(
   scalacOptions ++= Seq(
-    "-Wunused:all",
+    "-Yretain-trees",
     "-language:implicitConversions",
-    "-source:future",
     "-feature"
   )
 ) ++ scalafmtSettings
@@ -30,10 +32,12 @@ lazy val scalafmtSettings =
   Seq(scalafmtOnCompile := true)
 
 lazy val commonDeps = Seq(deps.cats, deps.catsEffect)
-lazy val circeDeps = Seq(deps.circe, deps.circeGeneric, deps.circeParser)
+lazy val circeDeps =
+  Seq(deps.circe, deps.circeGeneric, deps.circeParser)
 lazy val doobieDeps = Seq(deps.doobie, deps.doobieHikari, deps.doobiePostgres)
 lazy val http4sDeps =
   Seq(deps.http4sClient, deps.http4sServer, deps.http4sCirce, deps.http4sDsl)
+lazy val logDeps = Seq(deps.log4cats, deps.slf4j)
 
 lazy val deps = new {
   val catsVersion = "2.9.0"
@@ -41,6 +45,9 @@ lazy val deps = new {
   val circeVersion = "0.14.5"
   val doobieVersion = "1.0.0-RC2"
   val http4sVersion = "1.0.0-M39"
+  val log4catsVersion = "2.5.0"
+  val pureConfigVersion = "0.17.2"
+  val slf4jVersion = "2.0.5"
 
   val cats = "org.typelevel" %% "cats-core" % catsVersion
   val catsEffect = "org.typelevel" %% "cats-effect" % catsEffectVersion
@@ -57,4 +64,11 @@ lazy val deps = new {
   val http4sServer = "org.http4s" %% "http4s-ember-server" % http4sVersion
   val http4sCirce = "org.http4s" %% "http4s-circe" % http4sVersion
   val http4sDsl = "org.http4s" %% "http4s-dsl" % http4sVersion
+
+  val log4cats = "org.typelevel" %% "log4cats-slf4j" % log4catsVersion
+
+  val pureConfig =
+    "com.github.pureconfig" %% "pureconfig-core" % pureConfigVersion
+
+  val slf4j = "org.slf4j" % "slf4j-simple" % slf4jVersion
 }

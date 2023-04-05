@@ -1,33 +1,17 @@
 package modules
 
-import cats.MonadThrow
-import cats.effect.kernel.Resource
-import io.circe.*
-import io.circe.derivation.Configuration
-import io.circe.generic.semiauto.*
-import io.circe.{Decoder, Encoder}
+import cats.implicits.*
+import cats.effect.{MonadCancelThrow, Resource}
+import cats.implicits.catsSyntaxApply
+import errors.MissingOriginalTitleError
+import org.typelevel.log4cats.Logger
+import repositories.MoviesRepository
 import types.Country.Country
 import types.Genres.Genres
 import types.Ranking.Ranking
+import types.{Movie, given}
 
 import java.time.LocalDate
-
-case class Movie(
-    title: String, // TODO: max 250 char
-    country: Country,
-    year: Int,
-    originalTitle: Option[String],
-    frenchRelease: Option[LocalDate],
-    synopsis: Option[String],
-    genres: Genres,
-    ranking: Ranking
-)
-
-object Movie {
-  given Configuration = Configuration.default.withSnakeCaseMemberNames
-  given Decoder[Movie] = deriveDecoder[Movie]
-  given Encoder[Movie] = deriveEncoder[Movie]
-}
 
 trait MoviesModule[F[_]] {
 
@@ -40,7 +24,7 @@ trait MoviesModule[F[_]] {
     */
   def createMovie(movie: Movie): F[Unit]
 
-  /** Returns all the movies, we can optionally filter by genre.
+  /** Get all the movies, we can optionally filter by genre.
     *
     * @param genre
     *   The genre of the movie we want to filter on.
@@ -49,8 +33,7 @@ trait MoviesModule[F[_]] {
     */
   def getMovies(genre: Option[String]): F[List[Movie]]
 
-  /** Returns the count of all movies stored in the database, we can optionally
-    * filter by year of production.
+  /** Counts of all movies, we can optionally filter by year of production.
     *
     * @param year
     *   The year of production of the movie we want to filter on.
@@ -62,14 +45,26 @@ trait MoviesModule[F[_]] {
 }
 
 object MoviesModule {
-  def apply[F[_]: MonadThrow]: Resource[F, MoviesModule[F]] =
-    Resource.pure(new MoviesModule[F] { // TODO: Change how resource is acquired
-      override def createMovie(movie: Movie): F[Unit] = MonadThrow[F].unit
+  def apply[F[_]: MonadCancelThrow: Logger](
+      moviesRepo: MoviesRepository[F]
+  ): MoviesModule[F] = new MoviesModule[F] {
+    override def createMovie(movie: Movie): F[Unit] =
+      MonadCancelThrow[F].raiseWhen(
+        movie.country.value != "FRA" && movie.originalTitle.isEmpty
+      )(MissingOriginalTitleError) *>
+        moviesRepo.create(movie) *>
+        Logger[F].debug(s"movie successfully created")
 
-      override def getMovies(genre: Option[String]): F[List[Movie]] =
-        MonadThrow[F].pure(Nil)
+    override def getMovies(genre: Option[String]): F[List[Movie]] =
+      for {
+        movies <- moviesRepo.list(genre)
+        _ <- Logger[F].debug(s"successfully retrieved ${movies.length} results")
+      } yield movies
 
-      override def getMoviesCount(year: Option[Int]): F[Int] =
-        MonadThrow[F].pure(0)
-    })
+    override def getMoviesCount(year: Option[Int]): F[Int] =
+      for {
+        count <- moviesRepo.count(year)
+        _ <- Logger[F].debug(s"successfully retrieved $count results")
+      } yield count
+  }
 }
