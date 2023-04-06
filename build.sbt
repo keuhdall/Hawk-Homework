@@ -14,6 +14,7 @@ lazy val root = (project in file("."))
         doobieDeps ++
         http4sDeps ++
         logDeps ++
+        testDeps ++
         Seq(deps.pureConfig)
   )
   .enablePlugins(ScalafmtPlugin)
@@ -38,6 +39,8 @@ lazy val doobieDeps = Seq(deps.doobie, deps.doobieHikari, deps.doobiePostgres)
 lazy val http4sDeps =
   Seq(deps.http4sClient, deps.http4sServer, deps.http4sCirce, deps.http4sDsl)
 lazy val logDeps = Seq(deps.log4cats, deps.slf4j)
+lazy val testDeps =
+  Seq(deps.scalaTest, deps.scalaCheck, deps.scalaTestPlusCheck)
 
 lazy val deps = new {
   val catsVersion = "2.9.0"
@@ -48,6 +51,9 @@ lazy val deps = new {
   val log4catsVersion = "2.5.0"
   val pureConfigVersion = "0.17.2"
   val slf4jVersion = "2.0.5"
+  val scalaTestVersion = "3.2.15"
+  val scalaCheckVersion = "1.17.0"
+  val scalaTestPlusCheckVersion = "3.2.15.0"
 
   val cats = "org.typelevel" %% "cats-core" % catsVersion
   val catsEffect = "org.typelevel" %% "cats-effect" % catsEffectVersion
@@ -71,4 +77,9 @@ lazy val deps = new {
     "com.github.pureconfig" %% "pureconfig-core" % pureConfigVersion
 
   val slf4j = "org.slf4j" % "slf4j-simple" % slf4jVersion
+
+  val scalaTest = "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
+  val scalaCheck = "org.scalacheck" %% "scalacheck" % scalaCheckVersion % "test"
+  val scalaTestPlusCheck =
+    "org.scalatestplus" %% "scalacheck-1-17" % scalaTestPlusCheckVersion % "test"
 }

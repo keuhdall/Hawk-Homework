@@ -8,7 +8,7 @@ import types.Title.Title
 import utils.*
 
 object Title {
-  final val MAX_TITLE_LENGTH = 150
+  final val MAX_TITLE_LENGTH = 250
 
   opaque type Title = String
 
@@ -16,7 +16,7 @@ object Title {
 
   def apply(value: String): Title = value
   def safely(value: String): Either[ValidationFailure, Title] =
-    Either.cond(value.length < MAX_TITLE_LENGTH, value, TitleValidationFailure)
+    Either.cond(value.length <= MAX_TITLE_LENGTH, value, TitleValidationFailure)
 
   given (using read: Read[String]): Read[Title] = read.map(identity)
 }

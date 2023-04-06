@@ -13,13 +13,15 @@ import types.Genres.Genres
 import utils.*
 
 object Genres {
+  final val GENRES_MAX_LENGTH = 50
+
   opaque type Genres = List[String]
 
   extension (genres: Genres) { def value: List[String] = genres }
 
   def apply(value: List[String]): Genres = value.map(_.toLowerCase)
   def safely(value: List[String]): Either[ValidationFailure, Genres] = {
-    val invalidValues = value.filter(_.length > 50)
+    val invalidValues = value.filter(_.length > GENRES_MAX_LENGTH)
     value match {
       case Nil => GenresSizeValidationFailure.asLeft
       case _ if invalidValues.nonEmpty =>
