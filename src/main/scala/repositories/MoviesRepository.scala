@@ -60,7 +60,7 @@ object MoviesRepository {
       override def create(movie: Movie): F[Unit] = {
         val values: Fragment =
           fr""" VALUES (
-               ${movie.title},
+               ${movie.title.value},
                ${movie.country.value},
                ${movie.year},
                ${movie.originalTitle},

@@ -6,13 +6,18 @@ import io.circe.{Decoder, Encoder}
 import types.Country.Country
 import types.Genres.Genres
 import types.Ranking.Ranking
+import types.Title.Title
 
 import java.time.LocalDate
 
 given Configuration = Configuration.default.withSnakeCaseMemberNames
 
+object Movie {
+  final val MAX_TITLE_LENGTH = 150
+}
+
 case class Movie(
-    title: String, // TODO: max 250 char
+    title: Title,
     country: Country,
     year: Int,
     originalTitle: Option[String],

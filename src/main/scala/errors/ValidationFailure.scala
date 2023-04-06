@@ -32,6 +32,11 @@ case object RankingValidationFailure extends ValidationFailure {
     "Invalid ranking value: should be between 0 and 10"
 }
 
+case object TitleValidationFailure extends ValidationFailure {
+  override def getMessage: String =
+    "Invalid title value: max length is 250 characters"
+}
+
 case object MissingOriginalTitleError extends ValidationFailure {
   override def getMessage: String =
     "Missing original title for non-French release"

@@ -1,11 +1,11 @@
 package types
 
-import cats.implicits.*
 import doobie.Read
 import errors.{CountryValidationFailure, ValidationFailure}
 import io.circe.DecodingFailure.Reason.CustomReason
 import io.circe.{Decoder, DecodingFailure, Encoder}
 import types.Country.Country
+import utils.*
 
 object Country {
   opaque type Country = String
@@ -20,15 +20,4 @@ object Country {
 }
 
 given Encoder[Country] = Encoder[String].contramap(_.value)
-given Decoder[Country] = cursor =>
-  for {
-    value <- cursor.as[String]
-    country <- Country
-      .safely(value)
-      .leftMap(e =>
-        DecodingFailure(
-          CustomReason(s"failed to decode Country entity: ${e.getMessage}"),
-          cursor
-        )
-      )
-  } yield country
+given Decoder[Country] = _.decoded(Country.safely)
