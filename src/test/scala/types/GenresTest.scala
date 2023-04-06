@@ -7,6 +7,7 @@ import org.scalacheck.Gen
 import types.Genres.GENRES_MAX_LENGTH
 
 class GenresTest extends AnyFlatSpec, Matchers, ScalaCheckPropertyChecks {
+
   "Genres entity" should "fail for an empty list" in {
     Genres.safely(Nil).isLeft shouldBe true
   }
