@@ -15,6 +15,7 @@ lazy val root = (project in file("."))
         http4sDeps ++
         logDeps ++
         testDeps ++
+        testContainersDeps ++
         Seq(deps.pureConfig)
   )
   .enablePlugins(ScalafmtPlugin)
@@ -41,6 +42,8 @@ lazy val http4sDeps =
 lazy val logDeps = Seq(deps.log4cats, deps.slf4j)
 lazy val testDeps =
   Seq(deps.scalaTest, deps.scalaCheck, deps.scalaTestPlusCheck)
+lazy val testContainersDeps =
+  Seq(deps.testContainers, deps.testContainersPostgres)
 
 lazy val deps = new {
   val catsVersion = "2.9.0"
@@ -54,6 +57,7 @@ lazy val deps = new {
   val scalaTestVersion = "3.2.15"
   val scalaCheckVersion = "1.17.0"
   val scalaTestPlusCheckVersion = "3.2.15.0"
+  val testContainersVersion = "0.40.12"
 
   val cats = "org.typelevel" %% "cats-core" % catsVersion
   val catsEffect = "org.typelevel" %% "cats-effect" % catsEffectVersion
@@ -82,4 +86,10 @@ lazy val deps = new {
   val scalaCheck = "org.scalacheck" %% "scalacheck" % scalaCheckVersion % "test"
   val scalaTestPlusCheck =
     "org.scalatestplus" %% "scalacheck-1-17" % scalaTestPlusCheckVersion % "test"
+
+  val testContainers =
+    "com.dimafeng" %% "testcontainers-scala-scalatest" % testContainersVersion % "test"
+  val testContainersPostgres =
+    "com.dimafeng" %% "testcontainers-scala-postgresql" % testContainersVersion % "test"
+
 }
