@@ -12,6 +12,7 @@ The API should:
 
 - Make sure you have installed [JDK >= 11](https://www.oracle.com/java/technologies/downloads/), [sbt](https://www.scala-sbt.org/) as well as [docker](https://docs.docker.com/engine/install/)
 - Open the sbt prompt from the project directory using `sbt` and run `Docker / publishLocal`
+- Rename `.env.default` to `.env`
 - Run the stack using `docker-compose up`
 
 ## Calling the different routes
