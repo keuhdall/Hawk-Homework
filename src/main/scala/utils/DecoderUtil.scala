@@ -1,6 +1,6 @@
 package utils
 
-import cats.implicits.*
+import cats.implicits.catsSyntaxEither
 import errors.ValidationFailure
 import io.circe.Decoder.Result
 import io.circe.DecodingFailure.Reason.CustomReason

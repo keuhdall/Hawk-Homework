@@ -2,7 +2,12 @@ package routes
 
 import cats.{ApplicativeError, MonadThrow}
 import cats.effect.Async
-import cats.implicits.*
+import cats.implicits.{
+  catsSyntaxApply,
+  catsSyntaxApplicativeError,
+  toFunctorOps,
+  toFlatMapOps
+}
 import errors.ValidationFailure
 import io.circe.Json
 import modules.{MoviesModule, given}

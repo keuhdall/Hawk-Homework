@@ -22,7 +22,7 @@ case class GenresValuesValidationFailure(invalidValues: List[String])
     s"""
        |Invalid values for genres entity:
        |following values are invalid:
-       |${invalidValues.mkString}
+       |${invalidValues.mkString(", ")}
        |They should be lesser than or equal to 50 characters.
        |""".stripMargin
 }

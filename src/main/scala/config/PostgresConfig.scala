@@ -2,7 +2,7 @@ package config
 
 import cats.MonadThrow
 import cats.effect.Resource
-import cats.implicits.*
+import cats.implicits.catsSyntaxEither
 import errors.{ConfigError, PgConfigError}
 import pureconfig.error.ConfigReaderFailures
 import pureconfig.{ConfigReader, ConfigSource}

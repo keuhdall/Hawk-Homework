@@ -1,14 +1,10 @@
 package modules
 
-import cats.implicits.*
-import cats.effect.{MonadCancelThrow, Resource}
-import cats.implicits.catsSyntaxApply
+import cats.effect.MonadCancelThrow
+import cats.implicits.{catsSyntaxApply, toFunctorOps, toFlatMapOps}
 import errors.MissingOriginalTitleError
 import org.typelevel.log4cats.Logger
 import repositories.MoviesRepository
-import types.Country.Country
-import types.Genres.Genres
-import types.Ranking.Ranking
 import types.{Movie, given}
 
 import java.time.LocalDate

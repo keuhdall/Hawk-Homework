@@ -5,11 +5,8 @@ import cats.implicits.toFunctorOps
 import doobie.implicits.*
 import doobie.postgres.*
 import doobie.postgres.implicits.*
-import doobie.{Fragment, Read, Transactor, Write}
-import types.{Country, Genres, Movie, Ranking}
-import types.Country.{Country, given}
-import types.Genres.{Genres, given}
-import types.Ranking.{Ranking, given}
+import doobie.{Fragment, Transactor}
+import types.*
 
 import java.time.LocalDate
 
